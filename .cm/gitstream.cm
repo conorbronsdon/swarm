@@ -42,14 +42,13 @@ automations:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
   
-  # Option 4
-  label_from_branch:
+  add_static_label:
     if:
       - true
     run:
       - action: add-label@v1
         args:
-          label: "{{ branch_prefix }}"
+          label: "test-label"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -62,8 +61,6 @@ is:
 
 has:
   deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
-
-branch_prefix: "{{ branch[:branch.find('/')] if '/' in branch else branch }}"
 
 colors:
   red: "b60205"
