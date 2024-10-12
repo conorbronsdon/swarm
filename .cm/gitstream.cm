@@ -1,1 +1,36 @@
+# -*- mode: yaml -*-
+# Configuration file for gitStream PR automations
+manifest:
+  version: 1.0
+
+
+automations:
+  # Add a label that indicates how many minutes it will take to review the PR.
+  estimated_time_to_review:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ calc.etr }} min review"
+          color: {{ colors.red if (calc.etr >= 20) else ( colors.yellow if (calc.etr >= 5) else colors.green ) }}
+
+
+
+# +----------------------------------------------------------------------------+
+# | Custom Expressions                                                         |
+# | https://docs.gitstream.cm/how-it-works/#custom-expressions                 |
+# +----------------------------------------------------------------------------+
+
+calc:
+  etr: {{ branch | estimatedReviewTime }}
+
+has:
+  jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
+  jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
+
+colors:
+  red: 'b60205'
+  yellow: 'fbca04'
+  green: '0e8a16'
 
