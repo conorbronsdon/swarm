@@ -50,13 +50,26 @@ automations:
           comment: |
             This PR is considered a safe change and has been automatically approved.
 
-# These custom expressions are used in the safe_changes automation
-is:
-  formatting: {{ source.diff.files | isFormattingChange }}
-  docs: {{ files | allDocs }}
-  tests: {{ files | allTests }}
-  image: {{ files | allImages }}
 
+
+  # Description: Automatically apply labels to pull requests based on branch name prefixes
+  label_from_branch:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ branch | split('/') | first }}"
+      - action: add-label@v1
+        args:
+          label: '{{ if branch | includes("hotfix") then "urgent" else "" }}'
+
+# Supported branch prefixes and their corresponding labels:
+# - feature/  -> label: feature
+# - bugfix/   -> label: bugfix
+# - hotfix/   -> labels: hotfix, urgent
+# - release/  -> label: release
+# - docs/     -> label: documentation
 
   # Flag PRs that have unresolved comment threads.
   # https://docs.gitstream.cm/automations/standard/label-management/label-unresolved-threads/
@@ -81,11 +94,17 @@ is:
           label: 🗑️ Deleted files
           color: {{ colors.orange }}
 
-
 # +----------------------------------------------------------------------------+
 # | Custom Expressions                                                         |
 # | https://docs.gitstream.cm/how-it-works/#custom-expressions                 |
 # +----------------------------------------------------------------------------+
+
+# These custom expressions are used in the safe_changes automation
+is:
+  formatting: {{ source.diff.files | isFormattingChange }}
+  docs: {{ files | allDocs }}
+  tests: {{ files | allTests }}
+  image: {{ files | allImages }}
 
 # https://docs.gitstream.cm/filter-functions/#estimatedreviewtime
 calc:
