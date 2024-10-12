@@ -41,6 +41,14 @@ automations:
         args:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
+  
+  label_from_branch:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "branch-label"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
