@@ -50,8 +50,6 @@ automations:
           comment: |
             This PR is considered a safe change and has been automatically approved.
 
-
-
   # Description: Automatically apply labels to pull requests based on branch name prefixes
   label_from_branch:
     if:
@@ -64,12 +62,12 @@ automations:
         args:
           label: '{{ if branch | includes("hotfix") then "urgent" else "" }}'
 
-# Supported branch prefixes and their corresponding labels:
-# - feature/  -> label: feature
-# - bugfix/   -> label: bugfix
-# - hotfix/   -> labels: hotfix, urgent
-# - release/  -> label: release
-# - docs/     -> label: documentation
+    # Supported branch prefixes and their corresponding labels:
+    # - feature/  -> label: feature
+    # - bugfix/   -> label: bugfix
+    # - hotfix/   -> labels: hotfix, urgent
+    # - release/  -> label: release
+    # - docs/     -> label: documentation
 
   # Flag PRs that have unresolved comment threads.
   # https://docs.gitstream.cm/automations/standard/label-management/label-unresolved-threads/
@@ -114,7 +112,6 @@ has:
   jira_ticket_in_title: {{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}
   jira_ticket_in_desc: {{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}
   deleted_files: {{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}
-
 
 # These are all of the colors in GitHub's default label color palette.
 colors:
