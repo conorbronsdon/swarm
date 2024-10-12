@@ -50,8 +50,6 @@ automations:
           comment: |
             This PR is considered a safe change and has been automatically approved.
 
-
-
   # Description: Automatically apply labels to pull requests based on branch name prefixes
   label_from_branch:
     if:
@@ -64,12 +62,12 @@ automations:
         args:
           label: '{{ if branch | includes("hotfix") then "urgent" else "" }}'
 
-# Supported branch prefixes and their corresponding labels:
-# - feature/  -> label: feature
-# - bugfix/   -> label: bugfix
-# - hotfix/   -> labels: hotfix, urgent
-# - release/  -> label: release
-# - docs/     -> label: documentation
+  # Supported branch prefixes and their corresponding labels:
+  # - feature/  -> label: feature
+  # - bugfix/   -> label: bugfix
+  # - hotfix/   -> labels: hotfix, urgent
+  # - release/  -> label: release
+  # - docs/     -> label: documentation
 
   # Flag PRs that have unresolved comment threads.
   # https://docs.gitstream.cm/automations/standard/label-management/label-unresolved-threads/
