@@ -42,7 +42,6 @@ automations:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
   
-  # Option 4
   label_from_branch:
     if:
       - true
@@ -50,6 +49,9 @@ automations:
       - action: add-label@v1
         args:
           label: "{{ branch_prefix }}"
+      - action: add-label@v1
+        args:
+          label: "{{ 'urgent' if is_hotfix else '' }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -63,7 +65,8 @@ is:
 has:
   deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
 
-branch_prefix: "{{ branch.split('/')[0] }}"
+branch_prefix: >
+  {{ branch.split('/')[0] if '/' in branch else branch }}
 
 colors:
   red: "b60205"
