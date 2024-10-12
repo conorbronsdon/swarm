@@ -78,11 +78,6 @@ calc:
   # https://docs.gitstream.cm/filter-functions/#estimatedreviewtime
   etr: "{{ branch | estimatedReviewTime }}"
 
-has:
-  jira_ticket_in_title: "{{ pr.title | includes(regex=r/\b[A-Za-z]+-\d+\b/) }}"
-  jira_ticket_in_desc: "{{ pr.description | includes(regex=r/atlassian.net\/browse\/\w{1,}-\d{3,4}/) }}"
-  deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
-
 # These are all of the colors in GitHub's default label color palette.
 colors:
   red: "b60205"
