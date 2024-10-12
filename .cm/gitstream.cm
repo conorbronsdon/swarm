@@ -48,7 +48,7 @@ automations:
     run:
       - action: add-label@v1
         args:
-          label: "{{ branch | split('/') | first }}"
+          label: "{{ branch_prefix }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -61,6 +61,9 @@ is:
 
 has:
   deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
+
+branch_prefix: >
+  {{ branch.split('/')[0] if '/' in branch else branch }}
 
 colors:
   red: "b60205"
