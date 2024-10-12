@@ -14,7 +14,20 @@ automations:
         args:
           label: "{{ calc.etr }} min review"
           color: {{ colors.red if (calc.etr >= 20) else ( colors.yellow if (calc.etr >= 5) else colors.green ) }}
-
+# Add a label and auto approve simple changes (docs, tests, asset, formatting)  
+safe_changes:
+    if:
+      - {{ is.docs or is.tests or is.asset or is.formatting }}
+    run: 
+      - action: add-label@v1
+        args:
+          label: 'safe-changes'
+      - action: approve@v1
+is:
+  docs: {{ files | allDocs }}
+  tests: {{ files | allTests }}
+  asset: {{ files | match(regex=r/\.(png|svg|gif|css)$/) | every }}
+  formatting: {{ source.diff.files | isFormattingChange }}
 
 
 # +----------------------------------------------------------------------------+
