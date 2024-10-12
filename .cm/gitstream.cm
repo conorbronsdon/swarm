@@ -42,14 +42,15 @@ automations:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
   
-  # Option 1: Using a simpler expression
-  label_from_branch_1:
+  # Option 2: Using bracket notation instead of pipe
+  label_from_branch_2:
     if:
       - true
     run:
       - action: add-label@v1
         args:
-          label: "{{ branch }}"
+          label: "{{ branch.split('/')[0] }}"
+
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
 
