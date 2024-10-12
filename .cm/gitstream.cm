@@ -63,7 +63,7 @@ is:
 has:
   deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
 
-branch_prefix: "{{ branch.split('/')[0] }}"
+branch_prefix: "{{ branch[:branch.find('/')] if '/' in branch else branch }}"
 
 colors:
   red: "b60205"
