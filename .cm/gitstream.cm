@@ -1,9 +1,7 @@
-# -*- mode: yaml -*-
 manifest:
   version: 1.0
 
 automations:
-  # Apply color coded labels to PRs based on the estimated time to review.
   estimated_time_to_review:
     if:
       - true
@@ -13,69 +11,7 @@ automations:
           label: "{{ calc.etr }} min review"
           color: "{{ colors.red if (calc.etr >= 20) else (colors.yellow if (calc.etr >= 5) else colors.green) }}"
 
-  # Triggered for any changes that only affect formatting, documentation, tests, or images
-  safe_changes:
-    if:
-      - "{{ is.formatting or is.docs or is.tests or is.image }}"
-    # Apply a safe change label, approve the PR and explain why in a comment.
-    run: 
-      - action: add-label@v1
-        args:
-          label: "safe-change"
-      - action: approve@v1
-      - action: add-comment@v1
-        args:
-          comment: "This PR is considered a safe change and has been automatically approved."
-
-  # Automatically apply labels to pull requests based on branch name prefixes
-  label_from_branch:
-    if:
-      - true
-    run:
-      - action: add-label@v1
-        args:
-          label: "{{ branch | split('/') | first }}"
-      - action: add-label@v1
-        args:
-          label: "{{ 'urgent' if branch | includes('hotfix') else '' }}"
-    # Supported branch prefixes and their corresponding labels:
-    # - feature/  -> label: feature
-    # - bugfix/   -> label: bugfix
-    # - hotfix/   -> labels: hotfix, urgent
-    # - release/  -> label: release
-    # - docs/     -> label: documentation
-
-  # Flag PRs that have unresolved comment threads.
-  label_unresolved_threads:  
-    if:
-      - "{{ pr.status == 'open' }}"
-      - "{{ pr.unresolved_threads }}"
-    run:
-      - action: add-label@v1
-        args:
-          label: "🚨 {{ pr.unresolved_threads }} Unresolved Thread(s)"
-          color: "{{ colors.yellow }}"
-
-  # Flag PRs that delete files to highlight potential refactors that need extra scrutiny.
-  flag_deleted_files:
-    if:
-      - "{{ has.deleted_files }}"
-    run: 
-      - action: add-label@v1
-        args:
-          label: "🗑️ Deleted files"
-          color: "{{ colors.orange }}"
-
-# Custom Expressions
-is:
-  # These custom expressions are used in the safe_changes automation
-  formatting: "{{ source.diff.files | isFormattingChange }}"
-  docs: "{{ files | allDocs }}"
-  tests: "{{ files | allTests }}"
-  image: "{{ files | allImages }}"
-
 calc:
-  # https://docs.gitstream.cm/filter-functions/#estimatedreviewtime
   etr: "{{ branch | estimatedReviewTime }}"
 
 # These are all of the colors in GitHub's default label color palette.
