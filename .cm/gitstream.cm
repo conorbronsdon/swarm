@@ -23,16 +23,24 @@ automations:
         args:
           comment: "This PR is considered a safe change and has been automatically approved."
 
-  label_from_branch:
+  label_unresolved_threads:  
     if:
-      - true
+      - "{{ pr.status == 'open' }}"
+      - "{{ pr.unresolved_threads }}"
     run:
       - action: add-label@v1
         args:
-          label: "{{ branch | split('/') | first }}"
+          label: "🚨 {{ pr.unresolved_threads }} Unresolved Thread(s)"
+          color: "{{ colors.yellow }}"
+
+  flag_deleted_files:
+    if:
+      - "{{ has.deleted_files }}"
+    run: 
       - action: add-label@v1
         args:
-          label: "{{ 'urgent' if branch | includes('hotfix') else '' }}"
+          label: "🗑️ Deleted files"
+          color: "{{ colors.orange }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -43,7 +51,9 @@ is:
   tests: "{{ files | allTests }}"
   image: "{{ files | allImages }}"
 
-# These are all of the colors in GitHub's default label color palette.
+has:
+  deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
+
 colors:
   red: "b60205"
   orange: "d93f0b"
