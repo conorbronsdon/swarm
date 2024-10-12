@@ -42,13 +42,13 @@ automations:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
   
-  add_static_label:
+  label_from_branch:
     if:
       - true
     run:
       - action: add-label@v1
         args:
-          label: "test-label"
+          label: "branch-{{ branch }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
