@@ -42,14 +42,14 @@ automations:
           label: "🗑️ Deleted files"
           color: "{{ colors.orange }}"
   
-  # Option 3: Using double quotes for the entire expression
-  label_from_branch_3:
+  # Option 4
+  label_from_branch:
     if:
       - true
     run:
       - action: add-label@v1
         args:
-          label: "{{ branch | split(\"/\") | first }}"
+          label: "{{ branch_prefix }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -62,6 +62,8 @@ is:
 
 has:
   deleted_files: "{{ source.diff.files | map(attr='new_file') | match(term='/dev/null') | some }}"
+
+branch_prefix: "{{ branch.split('/')[0] }}"
 
 colors:
   red: "b60205"
