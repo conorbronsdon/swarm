@@ -50,6 +50,16 @@ automations:
       - action: add-label@v1
         args:
           label: "{{ branch }}"
+
+  # Option 2: Using bracket notation instead of pipe
+  label_from_branch_2:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ branch.split('/')[0] }}"
+
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
 
