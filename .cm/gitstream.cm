@@ -28,24 +28,7 @@ automations:
     tests: {{ files | allTests }}
     asset: {{ files | match(regex=r/\.(png|svg|gif|css)$/) | every }}
     formatting: {{ source.diff.files | isFormattingChange }}
-  # Description: Automatically apply labels to pull requests based on branch name prefixes
-  label_from_branch:
-    if:
-      - true
-    run:
-      - action: add-label@v1
-        args:
-          label: "{{ branch | split('/') | first }}"
-      - action: add-label@v1
-        args:
-          label: '{{ if branch | includes("hotfix") then "urgent" else "" }}'
 
-# Supported branch prefixes and their corresponding labels:
-# - feature/  -> label: feature
-# - bugfix/   -> label: bugfix
-# - hotfix/   -> labels: hotfix, urgent
-# - release/  -> label: release
-# - docs/     -> label: documentation
 # +----------------------------------------------------------------------------+
 # | Custom Expressions                                                         |
 # | https://docs.gitstream.cm/how-it-works/#custom-expressions                 |
