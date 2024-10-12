@@ -48,7 +48,7 @@ automations:
     run:
       - action: add-label@v1
         args:
-          label: "branch-{{ branch }}"
+          label: "{{ branch | split('/') | first }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
