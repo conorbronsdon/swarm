@@ -23,6 +23,17 @@ automations:
         args:
           comment: "This PR is considered a safe change and has been automatically approved."
 
+  label_from_branch:
+    if:
+      - true
+    run:
+      - action: add-label@v1
+        args:
+          label: "{{ branch | split('/') | first }}"
+      - action: add-label@v1
+        args:
+          label: "{{ 'urgent' if branch | includes('hotfix') else '' }}"
+
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
 
