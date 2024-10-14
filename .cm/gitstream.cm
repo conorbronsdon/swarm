@@ -48,7 +48,10 @@ automations:
     run:
       - action: add-label@v1
         args:
-          label: "branch-label"
+          label: "branch-{{ branch_prefix }}"
+      - action: add-label@v1
+        args:
+          label: "{{ 'urgent' if is_hotfix else '' }}"
 
 calc:
   etr: "{{ branch | estimatedReviewTime }}"
@@ -69,3 +72,14 @@ colors:
   green: "0e8a16"
   blue: "1d76db"
   purple: "5319e7"
+
+branch_prefix: >
+  {{ branch.split('/')[0] if '/' in branch else branch }}
+is_hotfix: >
+  {{ branch.startswith('hotfix/') }}
+
+# Debug output
+debug_output:
+  branch_name: "{{ branch }}"
+  branch_prefix: "{{ branch_prefix }}"
+  is_hotfix: "{{ is_hotfix }}"
